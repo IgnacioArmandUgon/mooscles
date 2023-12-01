@@ -1,8 +1,16 @@
-# React + Vite
+# Mooscles
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Proyecto para curso de KayzenHub "Desarrollo React avanzado"
 
-Currently, two official plugins are available:
+Pagina de gestión de rutinas y seguimiento de progreso de entrenamiento.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Creado con Vite.js
+
+### Requerimentos:
+
+* Debe usar rutas construidas con React Router DOM v6.
+* Debe usar Redux toolkit para el manejo del estado global.
+* Debe utilizarse firestore como unidad de persistencia de información.
+* Debes utilizar firebase como sistema de autenticación.
+* Se debe construir una imagen que permita desplegar esta aplicacion en un contenedor con NginX
+
