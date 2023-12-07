@@ -1,6 +1,6 @@
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { useState } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import appFirebase from './credenciales';
 import './index.css';
 import Auth from './pages/Auth';
@@ -15,6 +15,7 @@ const auth = getAuth(appFirebase);
 const App = () => {
   const [usuario, setUsuario] = useState(null);
   onAuthStateChanged(auth, (usuarioFirebase) => {
+    console.log({ usuarioFirebase });
     if (usuarioFirebase) {
       setUsuario(usuarioFirebase);
     } else {
@@ -60,10 +61,11 @@ const App = () => {
         </>
       ) : (
         <>
-          <Route path='/' element={<Navigate to='/auth' />} />
+          {/* <Route path='/' element={<Navigate to='/auth' />} /> */}
           <Route path='/auth' element={<Auth />} />
         </>
       )}
+      {/* <Route path='/auth' element={<Navigate to='/' />} /> */}
       <Route path='*' element={<ErrorPage />} />
     </Routes>
   );

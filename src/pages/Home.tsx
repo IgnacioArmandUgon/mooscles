@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import PageTitle from '../components/PageTitle';
-import { Exercise } from '../api/api';
 
 export const Home = () => {
   return (

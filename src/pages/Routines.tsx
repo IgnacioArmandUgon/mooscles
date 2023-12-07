@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Select from 'react-select';
 import { BodyPartType, Exercise, getExercisesByBodyPart } from '../api/api';
+import CreateRoutineForm from '../components/CreateRoutineForm';
 const partesDelCuerpo = [
   { value: 'back', label: 'Espalda' },
   { value: 'cardio', label: 'Cardio' },
@@ -15,7 +16,9 @@ const partesDelCuerpo = [
 ];
 export const Routines = () => {
   const [exercises, setExercises] = useState<Exercise[]>([]);
-  const [bodyPart, setBodyPart] = useState<BodyPartType>('');
+  const [bodyPart, setBodyPart] = useState<BodyPartType>('cardio');
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [exercisesList, setExercisesList] = useState<string[]>([]);
   useEffect(() => {
     if (bodyPart) {
       getExercisesByBodyPart(bodyPart).then((resp) => setExercises(resp || []));
@@ -24,8 +27,21 @@ export const Routines = () => {
 
   return (
     <>
-      <h1 className='tracking-widest mb-4'>Rutinas</h1>
-      <h2>Crea tu rutina</h2>
+      <div className='flex justify-between'>
+        <div className='flex flex-col'>
+          <h1 className='tracking-widest mb-4'>Rutinas</h1>
+          <h2 className='mb-4'>
+            Mira todos los ejercicios disponibles y crea tu rutina personalizada,
+          </h2>
+          <h3>o echa un vistazo a las creadas por otros usuarios..</h3>
+        </div>
+        <div className='flex items-center w-1/5'>
+          <button className='w-full h-full' onClick={() => setIsFormOpen(!isFormOpen)}>
+            Crear rutina
+          </button>
+        </div>
+      </div>
+      {isFormOpen && <CreateRoutineForm exercisesList={exercisesList} />}
       <Select
         options={partesDelCuerpo}
         onChange={(e) => setBodyPart((e?.value as BodyPartType) || '')}
@@ -36,17 +52,21 @@ export const Routines = () => {
           return (
             <div
               key={index}
-              className='bg-slate-900/40 flex items-center flex-col justify-between rounded p-5 w-[400px]'
+              className='bg-slate-900/40 flex items-center justify-between rounded p-3 w-[400px]'
             >
-              <p className='font-bold'>
-                {exe.name[0].toUpperCase() + exe.name.substring(1)}{' '}
-              </p>
-              <span>
-                Tipo: {partesDelCuerpo.find((e) => e.value === exe.bodyPart)?.label}
-              </span>
-
-              <img src={exe.gifUrl} width={200} className='rounded my-2' />
-              <button className=' w-full bg-transparent hover:bg-slate-600/20'>
+              <img src={exe.gifUrl} width={100} className='rounded my-2' />
+              <div className='flex flex-col ml-2'>
+                <p className='font-bold'>
+                  {exe.name[0].toUpperCase() + exe.name.substring(1)}{' '}
+                </p>
+                <span>
+                  Tipo: {partesDelCuerpo.find((e) => e.value === exe.bodyPart)?.label}
+                </span>
+              </div>
+              <button
+                className=' bg-transparent hover:bg-slate-600/20'
+                onClick={() => setExercisesList([...exercisesList, exe.name])}
+              >
                 Agregar
               </button>
             </div>
