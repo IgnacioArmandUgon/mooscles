@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Select from 'react-select';
 import { BodyPartType, Exercise, getExercisesByBodyPart } from '../api/api';
 import CreateRoutineForm from '../components/CreateRoutineForm';
+import ExerciseModal from '../components/ExerciseModal';
 const partesDelCuerpo = [
   { value: 'back', label: 'Espalda' },
   { value: 'cardio', label: 'Cardio' },
@@ -19,20 +20,51 @@ export const Routines = () => {
   const [bodyPart, setBodyPart] = useState<BodyPartType>('cardio');
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [exercisesList, setExercisesList] = useState<string[]>([]);
+  const [currentExercise, setCurrentExercise] = useState<Partial<Exercise>>({});
   useEffect(() => {
     if (bodyPart) {
       getExercisesByBodyPart(bodyPart).then((resp) => setExercises(resp || []));
     }
   }, [bodyPart]);
 
+  const capitalize = (text: string) => text.charAt(0).toUpperCase() + text.slice(1);
+
   return (
     <>
+      {Object.keys(currentExercise).length >= 2 && (
+        <ExerciseModal>
+          <div className='flex gap-3 items-center'>
+            <div className='w-[350px] h-[350px] mx-auto my-2'>
+              <img
+                src={currentExercise.gifUrl}
+                alt={`Gif demostrativo del ejercicio ${currentExercise.name}`}
+                width={350}
+                className='rounded-sm'
+              />
+            </div>
+            <div className='w-[450px] h-[350px] flex flex-col  gap-1'>
+              <div className='flex items-baseline gap-2'>
+                <h2>{capitalize(currentExercise.name!)}:</h2>
+                {/* <h3>Instrucciones</h3> */}
+              </div>
+              <ul className='h-[250px] overflow-y-auto my-2'>
+                {currentExercise.instructions?.map((i, index) => (
+                  <li>
+                    {index + 1} - {i}
+                  </li>
+                ))}
+              </ul>
+              <button className='w-full' onClick={() => setCurrentExercise({})}>
+                Cerrar
+              </button>
+            </div>
+          </div>
+        </ExerciseModal>
+      )}
       <div className='flex justify-between'>
         <div className='flex flex-col'>
           <h1 className='tracking-widest mb-4'>Rutinas</h1>
-          <h2 className='mb-4'>
-            Mira todos los ejercicios disponibles y crea tu rutina personalizada,
-          </h2>
+          <h2 className='mb-4'>Mira todos los ejercicios disponibles y crea tu rutina personalizada,</h2>
           <h3>o echa un vistazo a las creadas por otros usuarios..</h3>
         </div>
         <div className='flex items-center w-1/5'>
@@ -42,33 +74,29 @@ export const Routines = () => {
         </div>
       </div>
       {isFormOpen && <CreateRoutineForm exercisesList={exercisesList} />}
-      <Select
-        options={partesDelCuerpo}
-        onChange={(e) => setBodyPart((e?.value as BodyPartType) || '')}
-        className='w-full my-4'
-      />
+      <Select options={partesDelCuerpo} onChange={(e) => setBodyPart((e?.value as BodyPartType) || '')} className='w-full my-4' />
       <div className='flex gap-2 my-2 flex-wrap'>
-        {exercises.map((exe, index) => {
+        {exercises.map(({ name, gifUrl, bodyPart, instructions }, index) => {
           return (
-            <div
-              key={index}
-              className='bg-slate-900/40 flex items-center justify-between rounded p-3 w-[400px]'
-            >
-              <img src={exe.gifUrl} width={100} className='rounded my-2' />
+            <div key={index} className='bg-slate-900/40 flex items-center justify-between rounded p-3 w-[400px]'>
               <div className='flex flex-col ml-2'>
-                <p className='font-bold'>
-                  {exe.name[0].toUpperCase() + exe.name.substring(1)}{' '}
-                </p>
-                <span>
-                  Tipo: {partesDelCuerpo.find((e) => e.value === exe.bodyPart)?.label}
-                </span>
+                <p className='font-bold'>{capitalize(name)} </p>
+                <span>Tipo: {partesDelCuerpo.find((e) => e.value === bodyPart)?.label}</span>
               </div>
-              <button
-                className=' bg-transparent hover:bg-slate-600/20'
-                onClick={() => setExercisesList([...exercisesList, exe.name])}
-              >
-                Agregar
-              </button>
+              <div>
+                <button
+                  className='bg-transparent hover:bg-slate-600/20 px-2'
+                  onClick={() => setCurrentExercise({ name, gifUrl, instructions })}
+                >
+                  Ver mas
+                </button>
+                <button
+                  className='bg-transparent hover:bg-slate-600/20 px-2 underline underline-offset-2'
+                  onClick={() => setExercisesList([...exercisesList, name])}
+                >
+                  Agregar
+                </button>
+              </div>
             </div>
           );
         })}

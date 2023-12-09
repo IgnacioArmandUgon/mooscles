@@ -1,8 +1,4 @@
-import {
-  createUserWithEmailAndPassword,
-  getAuth,
-  signInWithEmailAndPassword,
-} from 'firebase/auth';
+import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import appFirebase from './../credenciales';
@@ -20,7 +16,6 @@ const Auth = () => {
   const { password, email, password2, isTouched, error } = formData;
   const navigate = useNavigate();
   const setFormError = (error) => setFormData({ ...formData, error });
-
   useEffect(() => {
     setFormError('');
     if (!Boolean(email.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g))) {
@@ -53,9 +48,7 @@ const Auth = () => {
       const error = err.customData._tokenResponse.error.errors[0].message;
       console.error({ error });
       setFormError(
-        error === 'EMAIL_EXISTS'
-          ? 'El correo ya está siendo usado'
-          : 'Ocurrió un error inesperado (mirá la consola papá)'
+        error === 'EMAIL_EXISTS' ? 'El correo ya está siendo usado' : 'Ocurrió un error inesperado (mirá la consola papá)'
       );
     }
   };
@@ -94,11 +87,7 @@ const Auth = () => {
         </div>
 
         <div className='flex flex-col'>
-          <button
-            disabled={Boolean(error)}
-            className='disabled:bg-slate-400/80'
-            onClick={() => handleAuth()}
-          >
+          <button disabled={Boolean(error)} className='disabled:bg-slate-400/80' onClick={() => handleAuth()}>
             {' '}
             {isLogin ? 'Ingresar' : 'Registrarse'}
           </button>
