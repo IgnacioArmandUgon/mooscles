@@ -14,8 +14,9 @@ const CreateRoutineForm = ({ exercisesList }: { exercisesList: string[] }) => {
         )}
       </div>
 
-      <div>
+      <div className='flex gap-2'>
         <button>Agregar descanso</button>
+        <button>Limpiar</button>
       </div>
     </div>
   );

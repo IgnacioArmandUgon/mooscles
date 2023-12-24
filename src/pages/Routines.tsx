@@ -21,9 +21,13 @@ export const Routines = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [exercisesList, setExercisesList] = useState<string[]>([]);
   const [currentExercise, setCurrentExercise] = useState<Partial<Exercise>>({});
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     if (bodyPart) {
-      getExercisesByBodyPart(bodyPart).then((resp) => setExercises(resp || []));
+      setIsLoading(true);
+      getExercisesByBodyPart(bodyPart)
+        .then((resp) => setExercises(resp || []))
+        .finally(() => setIsLoading(false));
     }
   }, [bodyPart]);
 
@@ -76,30 +80,34 @@ export const Routines = () => {
       {isFormOpen && <CreateRoutineForm exercisesList={exercisesList} />}
       <Select options={partesDelCuerpo} onChange={(e) => setBodyPart((e?.value as BodyPartType) || '')} className='w-full my-4' />
       <div className='flex gap-2 my-2 flex-wrap'>
-        {exercises.map(({ name, gifUrl, bodyPart, instructions }, index) => {
-          return (
-            <div key={index} className='bg-slate-900/40 flex items-center justify-between rounded p-3 w-[400px]'>
-              <div className='flex flex-col ml-2'>
-                <p className='font-bold'>{capitalize(name)} </p>
-                <span>Tipo: {partesDelCuerpo.find((e) => e.value === bodyPart)?.label}</span>
+        {isLoading ? (
+          <h1>Cargando...</h1>
+        ) : (
+          exercises.map(({ name, gifUrl, bodyPart, instructions }, index) => {
+            return (
+              <div key={index} className='bg-slate-900/40 flex items-center justify-between rounded p-3 w-[400px]'>
+                <div className='flex flex-col ml-2'>
+                  <p className='font-bold'>{capitalize(name)} </p>
+                  <span>Tipo: {partesDelCuerpo.find((e) => e.value === bodyPart)?.label}</span>
+                </div>
+                <div>
+                  <button
+                    className='bg-transparent hover:bg-slate-600/20 px-2'
+                    onClick={() => setCurrentExercise({ name, gifUrl, instructions })}
+                  >
+                    Ver mas
+                  </button>
+                  <button
+                    className='bg-transparent hover:bg-slate-600/20 px-2 underline underline-offset-2'
+                    onClick={() => setExercisesList([...exercisesList, name])}
+                  >
+                    Agregar
+                  </button>
+                </div>
               </div>
-              <div>
-                <button
-                  className='bg-transparent hover:bg-slate-600/20 px-2'
-                  onClick={() => setCurrentExercise({ name, gifUrl, instructions })}
-                >
-                  Ver mas
-                </button>
-                <button
-                  className='bg-transparent hover:bg-slate-600/20 px-2 underline underline-offset-2'
-                  onClick={() => setExercisesList([...exercisesList, name])}
-                >
-                  Agregar
-                </button>
-              </div>
-            </div>
-          );
-        })}
+            );
+          })
+        )}
       </div>
     </>
   );
