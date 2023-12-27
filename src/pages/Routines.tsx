@@ -49,7 +49,7 @@ export const Routines = () => {
             <div className='w-[450px] h-[350px] flex flex-col  gap-1'>
               <div className='flex items-baseline gap-2'>
                 <h2>{capitalize(currentExercise.name!)}:</h2>
-                {/* <h3>Instrucciones</h3> */}
+                <h3>Instrucciones</h3>
               </div>
               <ul className='h-[250px] overflow-y-auto my-2'>
                 {currentExercise.instructions?.map((i, index) => (
@@ -77,20 +77,23 @@ export const Routines = () => {
           </button>
         </div>
       </div>
-      {isFormOpen && <CreateRoutineForm exercisesList={exercisesList} />}
-      <Select options={partesDelCuerpo} onChange={(e) => setBodyPart((e?.value as BodyPartType) || '')} className='w-full my-4' />
       <div className='flex gap-2 my-2 flex-wrap'>
+        {isFormOpen &&
+          <aside className=''>
+            <CreateRoutineForm exercisesList={exercisesList} />
+          </aside>}
+        <Select options={partesDelCuerpo} onChange={(e) => setBodyPart((e?.value as BodyPartType) || '')} className='w-full my-4' />
         {isLoading ? (
           <h1>Cargando...</h1>
         ) : (
           exercises.map(({ name, gifUrl, bodyPart, instructions }, index) => {
             return (
               <div key={index} className='bg-slate-900/40 flex items-center justify-between rounded p-3 w-[400px]'>
-                <div className='flex flex-col ml-2'>
+                <div className='flex flex-col ml-2 w-1/2'>
                   <p className='font-bold'>{capitalize(name)} </p>
                   <span>Tipo: {partesDelCuerpo.find((e) => e.value === bodyPart)?.label}</span>
                 </div>
-                <div>
+                <div className='flex'>
                   <button
                     className='bg-transparent hover:bg-slate-600/20 px-2'
                     onClick={() => setCurrentExercise({ name, gifUrl, instructions })}
