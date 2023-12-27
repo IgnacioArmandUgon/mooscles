@@ -12,9 +12,10 @@ import { UserStats } from './pages/UserStats';
 
 const auth = getAuth(appFirebase);
 const App = () => {
-  const [usuario, setUsuario] = useState<null | User>(null);
+  const [usuario, setUsuario] = useState<null | User | 'initial'>('initial'); //Tengo que ponerle un valor inicial truty porque sino cuando refresco la pagina el null inicial de este estádo me redirige de nuevo al /auth a pesar de que ya tenga las credenciales de firebase
 
   onAuthStateChanged(auth, (usuarioFirebase) => {
+    console.log({ usuarioFirebase })
     if (usuarioFirebase) {
       setUsuario(usuarioFirebase);
     } else {
@@ -23,7 +24,6 @@ const App = () => {
   });
 
   const PrivateRoute = ({ component }) => {
-    console.log('asd');
     return usuario ? <PageLayout>{component}</PageLayout> : <Navigate to='/auth' />;
   };
   return (

@@ -32,7 +32,6 @@ export const getExercisesByBodyPart = async (bodyPart: BodyPartType): Promise<Ex
       },
     });
     const data = await resp.json();
-
     return data;
   } catch (error) {
     console.error({ error });

@@ -42,9 +42,11 @@ const Auth = () => {
 
   const handleAuth = async () => {
     try {
+      let credentials
       isLogin
-        ? await signInWithEmailAndPassword(auth, email, password)
-        : await createUserWithEmailAndPassword(auth, email, password);
+        ? credentials = await signInWithEmailAndPassword(auth, email, password)
+        : credentials = await createUserWithEmailAndPassword(auth, email, password);
+      console.log({ credentials })
       navigate('/');
     } catch (err) {
       console.error({ err: err.code });
