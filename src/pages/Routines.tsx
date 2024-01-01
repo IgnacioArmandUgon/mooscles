@@ -18,7 +18,7 @@ const partesDelCuerpo = [
 export const Routines = () => {
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [bodyPart, setBodyPart] = useState<BodyPartType>('cardio');
-  const [isFormOpen, setIsFormOpen] = useState(false);
+  // const [isFormOpen, setIsFormOpen] = useState(false);
   const [exercisesList, setExercisesList] = useState<string[]>([]);
   const [currentExercise, setCurrentExercise] = useState<Partial<Exercise>>({});
   const [isLoading, setIsLoading] = useState(false);
@@ -71,18 +71,19 @@ export const Routines = () => {
           <h2 className='mb-4'>Mira todos los ejercicios disponibles y crea tu rutina personalizada,</h2>
           <h3>o echa un vistazo a las creadas por otros usuarios..</h3>
         </div>
-        <div className='flex items-center w-1/5'>
+        {/* <div className='flex items-center w-1/5'>
           <button className='w-full h-full' onClick={() => setIsFormOpen(!isFormOpen)}>
             Crear rutina
           </button>
-        </div>
+        </div> */}
       </div>
-      <div className='flex gap-2 my-2 flex-wrap'>
-        {isFormOpen &&
-          <aside className=''>
-            <CreateRoutineForm exercisesList={exercisesList} />
-          </aside>}
-        <Select options={partesDelCuerpo} onChange={(e) => setBodyPart((e?.value as BodyPartType) || '')} className='w-full my-4' />
+      {/* {isFormOpen && ( */}
+      {/* <aside className=''> */}
+      <CreateRoutineForm exercisesList={exercisesList} setExercisesList={setExercisesList} />
+      {/* </aside> */}
+      {/* )} */}
+      <Select options={partesDelCuerpo} onChange={(e) => setBodyPart((e?.value as BodyPartType) || '')} className='w-full my-4' />
+      <div className='flex gap-2 my-2 flex-wrap overflow-y-auto h-[400px]'>
         {isLoading ? (
           <h1>Cargando...</h1>
         ) : (

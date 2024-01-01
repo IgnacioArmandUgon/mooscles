@@ -1,22 +1,52 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-const CreateRoutineForm = ({ exercisesList }: { exercisesList: string[] }) => {
+const RestTimeMap = {
+  1: '0:30',
+  2: '1:00',
+  3: '2:00',
+  4: '3:00',
+  5: '4:00',
+};
+
+const CreateRoutineForm = ({
+  exercisesList,
+  setExercisesList,
+}: {
+  exercisesList: string[];
+  setExercisesList: (exe: string[]) => void;
+}) => {
+  const getRestSelected = (): string => {
+    return RestTimeMap[document.getElementById('rest')![0].value];
+  };
   return (
     <div className='m-4'>
-      {/* Routine mapping */}
-      <div className='my-3 flex gap-2'>
+      <div className='my-3 flex align-middle gap-2 h-[35px]'>
         {exercisesList.length > 0 ? (
-          exercisesList.map((exe) => {
-            return <div>{exe}</div>;
+          exercisesList.map((exe, i) => {
+            return (
+              <div
+                key={i}
+                className={` ${Object.values(RestTimeMap).includes(exe) ? 'bg-slate-400' : 'bg-slate-300'} px-2 py-1 rounded-sm`}
+              >
+                {exe}
+              </div>
+            );
           })
         ) : (
-          <h3 className='text-slate-500'>Agrega ejercicios..</h3>
+          <h3 className='text-slate-500 text-[16px] h-4 my-auto'>Agrega ejercicios...</h3>
         )}
       </div>
 
       <div className='flex gap-2'>
-        <button>Agregar descanso</button>
-        <button>Limpiar</button>
+        <select name='rest' placeholder='tiempo' id='rest' className='px-2 rounded-sm '>
+          {Object.keys(RestTimeMap).map((key) => (
+            <option value={key} key={key}>
+              {RestTimeMap[key]}
+            </option>
+          ))}
+        </select>
+        <button onClick={() => setExercisesList([...exercisesList, getRestSelected()])}>Agregar descanso</button>
+        {exercisesList.length > 0 && <button onClick={() => setExercisesList([])}>Limpiar</button>}
       </div>
     </div>
   );
