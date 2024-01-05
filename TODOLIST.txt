@@ -1,2 +1,2 @@
-Formulario en sidebar para crear rutinas.
+
 Persistir información de logeo (redux)

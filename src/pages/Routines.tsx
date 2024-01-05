@@ -19,7 +19,7 @@ export const Routines = () => {
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [bodyPart, setBodyPart] = useState<BodyPartType>('cardio');
   // const [isFormOpen, setIsFormOpen] = useState(false);
-  const [exercisesList, setExercisesList] = useState<string[]>([]);
+  const [exercisesList, setExercisesList] = useState<{ name: string, id: number }[]>([]);
   const [currentExercise, setCurrentExercise] = useState<Partial<Exercise>>({});
   const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
@@ -47,7 +47,7 @@ export const Routines = () => {
               />
             </div>
             <div className='w-[450px] h-[350px] flex flex-col  gap-1'>
-              <div className='flex items-baseline gap-2'>
+              <div className='flex flex-col items-baseline gap-2'>
                 <h2>{capitalize(currentExercise.name!)}:</h2>
                 <h3>Instrucciones</h3>
               </div>
@@ -69,27 +69,18 @@ export const Routines = () => {
         <div className='flex flex-col'>
           <h1 className='tracking-widest mb-4'>Rutinas</h1>
           <h2 className='mb-4'>Mira todos los ejercicios disponibles y crea tu rutina personalizada,</h2>
-          <h3>o echa un vistazo a las creadas por otros usuarios..</h3>
+          <h3 className='text-slate-500'>o echa un vistazo a las creadas por otros usuarios..</h3>
         </div>
-        {/* <div className='flex items-center w-1/5'>
-          <button className='w-full h-full' onClick={() => setIsFormOpen(!isFormOpen)}>
-            Crear rutina
-          </button>
-        </div> */}
       </div>
-      {/* {isFormOpen && ( */}
-      {/* <aside className=''> */}
       <CreateRoutineForm exercisesList={exercisesList} setExercisesList={setExercisesList} />
-      {/* </aside> */}
-      {/* )} */}
       <Select options={partesDelCuerpo} onChange={(e) => setBodyPart((e?.value as BodyPartType) || '')} className='w-full my-4' />
-      <div className='flex gap-2 my-2 flex-wrap overflow-y-auto h-[400px]'>
+      <div className='flex gap-2 my-2 flex-wrap overflow-y-auto h-[450px]'>
         {isLoading ? (
-          <h1>Cargando...</h1>
+          <p className='text-2xl'>Cargando...</p>
         ) : (
           exercises.map(({ name, gifUrl, bodyPart, instructions }, index) => {
             return (
-              <div key={index} className='bg-slate-900/40 flex items-center justify-between rounded p-3 w-[400px]'>
+              <div key={index} className='bg-slate-900/40 flex items-center justify-between rounded p-3 max-h-[125px] w-[400px]'>
                 <div className='flex flex-col ml-2 w-1/2'>
                   <p className='font-bold'>{capitalize(name)} </p>
                   <span>Tipo: {partesDelCuerpo.find((e) => e.value === bodyPart)?.label}</span>
@@ -103,7 +94,7 @@ export const Routines = () => {
                   </button>
                   <button
                     className='bg-transparent hover:bg-slate-600/20 px-2 underline underline-offset-2'
-                    onClick={() => setExercisesList([...exercisesList, name])}
+                    onClick={() => setExercisesList([...exercisesList, { name, id: Date.now() }])}
                   >
                     Agregar
                   </button>
