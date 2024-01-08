@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import Select from 'react-select';
 import { BodyPartType, Exercise, getExercisesByBodyPart } from '../api/api';
 import CreateRoutineForm from '../components/CreateRoutineForm';
 import ExerciseModal from '../components/ExerciseModal';
+import { addExercise } from '../store/routineSlice';
 const partesDelCuerpo = [
   { value: 'back', label: 'Espalda' },
   { value: 'cardio', label: 'Cardio' },
@@ -15,13 +17,19 @@ const partesDelCuerpo = [
   { value: 'upper legs', label: 'Piernas superiores' },
   { value: 'waist', label: 'Cintura' },
 ];
+
+export type routineExer = { name: string; id: number };
+
 export const Routines = () => {
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [bodyPart, setBodyPart] = useState<BodyPartType>('cardio');
-  // const [isFormOpen, setIsFormOpen] = useState(false);
-  const [exercisesList, setExercisesList] = useState<{ name: string, id: number }[]>([]);
   const [currentExercise, setCurrentExercise] = useState<Partial<Exercise>>({});
   const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
+
+  const setExercisesList = (exe: routineExer) => {
+    dispatch(addExercise(exe));
+  };
   useEffect(() => {
     if (bodyPart) {
       setIsLoading(true);
@@ -53,7 +61,7 @@ export const Routines = () => {
               </div>
               <ul className='h-[250px] overflow-y-auto my-2'>
                 {currentExercise.instructions?.map((i, index) => (
-                  <li>
+                  <li key={index}>
                     {index + 1} - {i}
                   </li>
                 ))}
@@ -72,7 +80,7 @@ export const Routines = () => {
           <h3 className='text-slate-500'>o echa un vistazo a las creadas por otros usuarios..</h3>
         </div>
       </div>
-      <CreateRoutineForm exercisesList={exercisesList} setExercisesList={setExercisesList} />
+      <CreateRoutineForm />
       <Select options={partesDelCuerpo} onChange={(e) => setBodyPart((e?.value as BodyPartType) || '')} className='w-full my-4' />
       <div className='flex gap-2 my-2 flex-wrap overflow-y-auto h-[450px]'>
         {isLoading ? (
@@ -94,7 +102,9 @@ export const Routines = () => {
                   </button>
                   <button
                     className='bg-transparent hover:bg-slate-600/20 px-2 underline underline-offset-2'
-                    onClick={() => setExercisesList([...exercisesList, { name, id: Date.now() }])}
+                    onClick={() => {
+                      setExercisesList({ name, id: Date.now() });
+                    }}
                   >
                     Agregar
                   </button>
