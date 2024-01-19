@@ -1,12 +1,15 @@
 import { DndContext, KeyboardSensor, PointerSensor, closestCenter, useSensor, useSensors } from '@dnd-kit/core';
 import { SortableContext, arrayMove, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { getAuth } from 'firebase/auth';
+import { addDoc, collection, getFirestore } from 'firebase/firestore';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import appFirebase from '../credenciales';
 import { addExercise, deleteRoutine, setRoutine } from '../store/routineSlice';
 import { RootState } from '../store/store';
 import ExcerciseElement from './ExcerciseElement';
 
-const RestTimeMap = {
+export const RestTimeMap = {
   1: '0:30',
   2: '1:00',
   3: '2:00',
@@ -15,19 +18,33 @@ const RestTimeMap = {
 };
 
 const CreateRoutineForm = () => {
-  const getRestSelected = (): string => {
-    return RestTimeMap[document.getElementById('rest')![0].value];
-  };
-
   const { routine } = useSelector((state: RootState) => state.routineStore);
   const dispatch = useDispatch();
+
+  const getRestSelected = (): string => {
+    const selectedValue = document.getElementById('rest')!.value;
+    return RestTimeMap[selectedValue];
+  };
+  const handleSaveRoutine = () => {
+    const db = getFirestore(appFirebase);
+    const { currentUser } = getAuth();
+    addDoc(collection(db, 'Routines'), {
+      author: currentUser?.email,
+      routine,
+    })
+      .then((snapshot) => {
+        console.log({ snapshot });
+      })
+      .catch((err) => console.error({ err }))
+      .finally(() => dispatch(deleteRoutine()));
+  };
+
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
-
   function handleDragEnd(event) {
     const { active, over } = event;
 
@@ -36,9 +53,7 @@ const CreateRoutineForm = () => {
         const getExeById = (id) => routine.find((exe) => exe.id === id);
         const oldIndex = routine.indexOf(getExeById(active.id)!);
         const newIndex = routine.indexOf(getExeById(over.id)!);
-
         const newArray = arrayMove(routine, oldIndex, newIndex);
-
         dispatch(setRoutine(newArray));
       }
     }
@@ -72,7 +87,9 @@ const CreateRoutineForm = () => {
           <button onClick={() => dispatch(addExercise({ name: getRestSelected(), id: Date.now() }))}>Agregar descanso</button>
           {routine.length > 0 && <button onClick={() => dispatch(deleteRoutine())}>Limpiar</button>}
         </div>
-        <button disabled={routine.length < 3}>Guardar</button>
+        <button disabled={routine.length < 3} onClick={() => handleSaveRoutine()}>
+          Guardar
+        </button>
       </div>
     </div>
   );

@@ -5,6 +5,9 @@ import { BodyPartType, Exercise, getExercisesByBodyPart } from '../api/api';
 import CreateRoutineForm from '../components/CreateRoutineForm';
 import ExerciseModal from '../components/ExerciseModal';
 import { addExercise } from '../store/routineSlice';
+import { capitalize } from '../utils/capitalize';
+import { v4 as uuidv4 } from 'uuid';
+import { Link } from 'react-router-dom';
 const partesDelCuerpo = [
   { value: 'back', label: 'Espalda' },
   { value: 'cardio', label: 'Cardio' },
@@ -27,9 +30,6 @@ export const Routines = () => {
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
 
-  const setExercisesList = (exe: routineExer) => {
-    dispatch(addExercise(exe));
-  };
   useEffect(() => {
     if (bodyPart) {
       setIsLoading(true);
@@ -38,8 +38,6 @@ export const Routines = () => {
         .finally(() => setIsLoading(false));
     }
   }, [bodyPart]);
-
-  const capitalize = (text: string) => text.charAt(0).toUpperCase() + text.slice(1);
 
   return (
     <>
@@ -76,8 +74,10 @@ export const Routines = () => {
       <div className='flex justify-between'>
         <div className='flex flex-col'>
           <h1 className='tracking-widest mb-4'>Rutinas</h1>
-          <h2 className='mb-4'>Mira todos los ejercicios disponibles y crea tu rutina personalizada,</h2>
-          <h3 className='text-slate-500'>o echa un vistazo a las creadas por otros usuarios..</h3>
+          <h2 className='mb-4'>Mira todos los ejercicios disponibles y crea tu rutina personalizada!</h2>
+          <h3>
+            <Link to={'more'}>o echa un vistazo a las creadas por otros usuarios...</Link>
+          </h3>
         </div>
       </div>
       <CreateRoutineForm />
@@ -86,7 +86,7 @@ export const Routines = () => {
         {isLoading ? (
           <p className='text-2xl'>Cargando...</p>
         ) : (
-          exercises.map(({ name, gifUrl, bodyPart, instructions }, index) => {
+          exercises.map(({ name, gifUrl, bodyPart, instructions, id }, index) => {
             return (
               <div key={index} className='bg-slate-900/40 flex items-center justify-between rounded p-3 max-h-[125px] w-[400px]'>
                 <div className='flex flex-col ml-2 w-1/2'>
@@ -103,7 +103,7 @@ export const Routines = () => {
                   <button
                     className='bg-transparent hover:bg-slate-600/20 px-2 underline underline-offset-2'
                     onClick={() => {
-                      setExercisesList({ name, id: Date.now() });
+                      dispatch(addExercise({ name, id: uuidv4() }));
                     }}
                   >
                     Agregar

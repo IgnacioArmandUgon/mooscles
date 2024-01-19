@@ -9,6 +9,7 @@ import { Home } from './pages/Home';
 import PageLayout from './pages/PageLayout';
 import { Routines } from './pages/Routines';
 import { UserStats } from './pages/UserStats';
+import RoutinesList from './pages/RoutinesList';
 
 const auth = getAuth(appFirebase);
 const App = () => {
@@ -16,6 +17,7 @@ const App = () => {
 
   onAuthStateChanged(auth, (usuarioFirebase) => {
     if (usuarioFirebase) {
+      console.log({ usuarioFirebase });
       setUsuario(usuarioFirebase);
     } else {
       setUsuario(null);
@@ -29,6 +31,7 @@ const App = () => {
     <Routes>
       <Route path='/' element={<PrivateRoute component={<Home />} />} />
       <Route path='/routines' element={<PrivateRoute component={<Routines />} />} />
+      <Route path='/routines/more' element={<PrivateRoute component={<RoutinesList />} />} />
       <Route path='/userstats' element={<PrivateRoute component={<UserStats />} />} />
       <Route path='/exercises' element={<PrivateRoute component={<Exercises />} />} />
       <Route path='/auth' element={<Auth />} />
