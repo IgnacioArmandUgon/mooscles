@@ -1,2 +1,1 @@
-
-Persistir información de logeo (redux)
+Botón de "Publicar" aparte de "Guardar". Guardado privado y público. 
