@@ -50,7 +50,7 @@ const Auth = () => {
     } catch (err) {
       console.error({ err: err.code });
       if (err.code) {
-        setFormError(firebaseErrorMessages[err.code]);
+        setFormError(firebaseErrorMessages[err.code] ?? 'Ocurrió un error inesperado (mirá la consola papá)');
       } else {
         setFormError('Ocurrió un error inesperado (mirá la consola papá)');
       }

@@ -27,7 +27,7 @@ export const Routines = () => {
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [bodyPart, setBodyPart] = useState<BodyPartType>('cardio');
   const [currentExercise, setCurrentExercise] = useState<Partial<Exercise>>({});
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -81,12 +81,18 @@ export const Routines = () => {
         </div>
       </div>
       <CreateRoutineForm />
-      <Select options={partesDelCuerpo} onChange={(e) => setBodyPart((e?.value as BodyPartType) || '')} className='w-full my-4' />
-      <div className='flex gap-2 my-2 flex-wrap overflow-y-auto h-[450px]'>
-        {isLoading ? (
-          <p className='text-2xl'>Cargando...</p>
-        ) : (
-          exercises.map(({ name, gifUrl, bodyPart, instructions, id }, index) => {
+      <Select
+        options={partesDelCuerpo}
+        onChange={(e) => setBodyPart((e?.value as BodyPartType) || '')}
+        className='w-full my-4 t text-black bg-slate-500'
+      />
+      {isLoading ? (
+        <span className='text-2xl flex items-center gap-2'>
+          Cargando <img src='/loading.svg' className='animate-spin' width={24} />
+        </span>
+      ) : (
+        <div className='flex gap-2 my-2 flex-wrap overflow-y-auto h-[450px]'>
+          {exercises.map(({ name, gifUrl, bodyPart, instructions, id }, index) => {
             return (
               <div key={index} className='bg-slate-900/40 flex items-center justify-between rounded p-3 max-h-[125px] w-[400px]'>
                 <div className='flex flex-col ml-2 w-1/2'>
@@ -111,9 +117,9 @@ export const Routines = () => {
                 </div>
               </div>
             );
-          })
-        )}
-      </div>
+          })}
+        </div>
+      )}
     </>
   );
 };

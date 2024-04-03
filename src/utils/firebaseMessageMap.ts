@@ -6,4 +6,5 @@ export const firebaseErrorMessages = {
   'auth/email-already-in-use': 'El correo electrónico ya está en uso por otra cuenta.',
   'auth/weak-password': 'La contraseña es débil, elige una contraseña más fuerte.',
   'auth/too-many-requests': 'La cantidad de solicitudes supera el máximo permitido.',
+  'auth/invalid-credential': 'Credenciales invalidas',
 };
