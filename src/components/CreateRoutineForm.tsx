@@ -60,7 +60,7 @@ const CreateRoutineForm = () => {
   }
 
   return (
-    <div className='p-2 my-2 rounded-md border-white border-dotted border-2'>
+    <div className='p-2 my-2 rounded-md border-dark-300 border-dotted border-2'>
       <div className='mb-3 flex align-middle gap-2 h-[35px]'>
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
           <SortableContext items={routine} strategy={verticalListSortingStrategy}>
@@ -77,7 +77,7 @@ const CreateRoutineForm = () => {
 
       <div className='flex justify-between'>
         <div className='flex gap-2'>
-          <select name='rest' placeholder='tiempo' id='rest' className='px-2 rounded-sm '>
+          <select name='rest' placeholder='tiempo' id='rest' className='px-2 py-1 rounded-sm '>
             {Object.keys(RestTimeMap).map((key) => (
               <option value={key} key={key}>
                 {RestTimeMap[key]}

@@ -9,33 +9,33 @@ export const Navbar = () => {
 
   const textArray = [
     <i>
-      Time to poomp the <span className='text-blue-500'>mooscles</span>
+      Time to poomp the <span className='text-primary-200'>mooscles</span>
     </i>,
     <i>
-      I'm growing <span className='text-blue-500'>stronker</span>
+      I'm growing <span className='text-primary-200'>stronker</span>
     </i>,
     <i>
-      My <span className='text-blue-500'>mooscles</span> are getting bigger
+      My <span className='text-primary-200'>mooscles</span> are getting bigger
     </i>,
     <i>
-      I'm growing very <span className='text-blue-500'>stronk</span>
+      Another day of <span className='text-primary-200'>mooscles</span>
     </i>,
     <i>
-      Another day of <span className='text-blue-500'>mooscles</span>
+      I'm growing very <span className='text-primary-200'>stronk</span>
     </i>,
   ];
 
   useEffect(() => {
     const intervalId = setInterval(() => {
       setCurrentTextIndex((prevIndice) => (prevIndice + 1) % textArray.length);
-    }, 2000);
+    }, 8000);
 
     return () => clearInterval(intervalId);
   }, []);
 
   return (
-    <nav className='flex justify-between  items-center my-4 mx-5'>
-      <ol className='flex gap-2 text-lg text-blue-500'>
+    <nav className='flex justify-between items-center my-4 mx-5'>
+      <ol className='flex gap-2 text-lg text-primary-100'>
         <li>
           <Link to='/' className={linkStyles}>
             💪🏻 Mooscles

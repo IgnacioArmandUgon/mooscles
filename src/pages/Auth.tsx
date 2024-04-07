@@ -91,11 +91,11 @@ const Auth = () => {
         </div>
 
         <div className='flex flex-col'>
-          <button disabled={Boolean(error)} className='disabled:bg-slate-400/80' onClick={() => handleAuth()}>
+          <button disabled={Boolean(error)} className=' primary' onClick={() => handleAuth()}>
             {isLogin ? 'Ingresar' : 'Registrarse'}
           </button>
           <button
-            className='bg-transparent hover:border-none'
+            className=''
             onClick={() => {
               setIsLogin(!isLogin);
               setFormData(FORM_INITIAL_VALUE);

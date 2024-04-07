@@ -39,6 +39,35 @@ export const Routines = () => {
     }
   }, [bodyPart]);
 
+  const customStyles = {
+    control: (base, state) => ({
+      ...base,
+      background: '#666666',
+      color: '#f0f0f0',
+      borderRadius: state.isFocused ? '3px 3px 0 0' : 3,
+    }),
+    placeholder: (base) => ({
+      ...base,
+      color: '#f0f0f0',
+    }),
+    singleValue: (base) => ({
+      ...base,
+      color: '#f0f0f0',
+    }),
+    option: (styles, { isFocused, isSelected }) => ({
+      ...styles,
+      color: '#f0f0f0',
+      background: isSelected ? '#7a7c99' : isFocused ? '#222222' : undefined,
+      zIndex: 1,
+    }),
+
+    menuList: (base) => ({
+      ...base,
+      padding: 0,
+      background: '#666666',
+    }),
+  };
+
   return (
     <>
       {Object.keys(currentExercise).length >= 2 && (
@@ -71,20 +100,21 @@ export const Routines = () => {
           </div>
         </ExerciseModal>
       )}
-      <div className='flex justify-between'>
+      <div className='flex justify-between py-4 '>
         <div className='flex flex-col'>
-          <h1 className='tracking-widest mb-4'>Rutinas</h1>
-          <h2 className='mb-4'>Mira todos los ejercicios disponibles y crea tu rutina personalizada!</h2>
-          <h3>
-            <Link to={'more'}>o echa un vistazo a las creadas por otros usuarios...</Link>
-          </h3>
+          <h2 className='tracking-widest mb-4'>Rutinas</h2>
+          <h4 className='mb-4'>Mira todos los ejercicios disponibles y crea tu rutina personalizada!</h4>
+          <h4>
+            <Link to='more'>o echa un vistazo a las creadas por otros usuarios...</Link>
+          </h4>
         </div>
       </div>
       <CreateRoutineForm />
       <Select
         options={partesDelCuerpo}
         onChange={(e) => setBodyPart((e?.value as BodyPartType) || '')}
-        className='w-full my-4 t text-black bg-slate-500'
+        placeholder='Pecho, espalda, hombros'
+        styles={customStyles}
       />
       {isLoading ? (
         <span className='text-2xl flex items-center gap-2'>
@@ -99,15 +129,12 @@ export const Routines = () => {
                   <p className='font-bold'>{capitalize(name)} </p>
                   <span>Tipo: {partesDelCuerpo.find((e) => e.value === bodyPart)?.label}</span>
                 </div>
-                <div className='flex'>
-                  <button
-                    className='bg-transparent hover:bg-slate-600/20 px-2'
-                    onClick={() => setCurrentExercise({ name, gifUrl, instructions })}
-                  >
+                <div className='flex gap-1'>
+                  <button className='px-2 py-1' onClick={() => setCurrentExercise({ name, gifUrl, instructions })}>
                     Ver mas
                   </button>
                   <button
-                    className='bg-transparent hover:bg-slate-600/20 px-2 underline underline-offset-2'
+                    className=' px-2 py-1 primary '
                     onClick={() => {
                       dispatch(addExercise({ name, id: uuidv4() }));
                     }}
